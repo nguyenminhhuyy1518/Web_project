@@ -1,0 +1,79 @@
+﻿@using ShopComputer.Models.ViewModel
+@model CartItemViewModel
+
+<section id="cart_items">
+    <div class="container">
+        <div class="breadcrumbs">
+            <ol class="breadcrumb">
+                <li><a href="#">Home</a></li>
+                <li class="active">Shopping Cart</li>
+            </ol>
+        </div>
+        <div class="table-responsive cart_info">
+            <table class="table table-bordered table-hover text-center">
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="text-center">Item</th>
+                        <th class="text-center">Description</th>
+                        <th class="text-center">Price</th>
+                        <th class="text-center">Quantity</th>
+                        <th class="text-center">Total</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.CartItem.Count > 0)
+                    {
+                        @foreach (var item in Model.CartItem)
+                        {
+                            <tr>
+                                <td>
+                                    <a href=""><img src="/media/products/@item.Image" alt="" style="width: 70px; height: auto;"></a>
+                                </td>
+                                <td>
+                                    <h5><a href="" style="color:gray">@item.ProductName</a></h5>
+                                </td>
+                                <td>
+                                    <p>$ @item.Price.ToString("#,##0 VNĐ")</p>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <a class="btn btn-primary btn-sm mx-1" asp-controller="Cart" asp-action="Increase" asp-route-Id="@item.ProductId"> + </a>
+                                        <input class="cart_quantity_input text-center" type="text" name="quantity" value="@item.Quantity" size="2" style="width: 50px; margin-top:16px">
+                                        <a class="btn btn-primary btn-sm mx-1" asp-controller="Cart" asp-action="Decrease" asp-route-Id="@item.ProductId"> - </a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="cart_total_price">$@((item.Quantity * item.Price).ToString("0.00"))</p>
+                                </td>
+                                <td>
+                                    <a class="btn btn-danger btn-sm" asp-controller="Cart" asp-action="Remove" asp-route-Id="@item.ProductId"> Remove </a>
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td colspan="4" class="text-right font-weight-bold">Grand Total:</td>
+                            <td colspan="2" class="font-weight-bold">$@Model.GrandTotal.ToString("0.00")</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"></td>
+                            <td><a class="btn btn-danger btn-sm" asp-controller="Cart" asp-action="Clear"> Clear Cart </a></td>
+                            <td>
+                                @if (User.Identity?.IsAuthenticated ?? false)
+                                {
+                                    <a class="btn btn-primary btn-sm" asp-controller="Checkout" asp-action="Checkout"> Checkout </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6"><h4>Your cart is empty</h4></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
